@@ -1,6 +1,10 @@
 class EntriesController < ApplicationController
   before_action :require_login
 
+  def new
+    @entry = Entry.new
+  end
+
   def create
     @place = Place.find(params[:place_id])
     @entry = @place.entries.build(entry_params)
@@ -9,7 +13,7 @@ class EntriesController < ApplicationController
     if @entry.save
       redirect_to place_path(@place)
     else
-      render "places/show"
+      render "entries/new"
     end
   end
 
