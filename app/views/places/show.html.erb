@@ -1,16 +1,30 @@
-<h1><%= @place["name"] %></h1>
+<h1><%= @place.name %></h1>
 
 <h2>My Entries</h2>
-<% for entry in @entries %>
-  <h3><%= entry["title"] %></h3>
-  <h4><%= entry["occurred_on"] %></h4>
-  <p><%= entry["description"] %></p>
+
+<div class="row">
+  <% @entries.each do |entry| %>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card h-100">
+        <% if entry.image.attached? %>
+          <%= image_tag entry.image, class: "card-img-top" %>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%= entry.title %></h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%= entry.occurred_on %></h6>
+          <p class="card-text"><%= entry.description %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if logged_in? %>
+  <p>
+    <%= link_to "New Entry", new_entry_path(place_id: @place.id), class: "btn btn-primary" %>
+  </p>
 <% end %>
 
 <p>
-  <a href="/entries/new?place_id=<%= @place["id"] %>">New Entry</a>
-</p>
-
-<p>
-  <a href="/places">Back to All Places</a>
+  <%= link_to "Back to All Places", places_path, class: "btn btn-secondary" %>
 </p>

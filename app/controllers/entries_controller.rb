@@ -1,16 +1,21 @@
 class EntriesController < ApplicationController
-
-  def new
-  end
+  before_action :require_login
 
   def create
-    @entry = Entry.new
-    @entry["title"] = params["title"]
-    @entry["description"] = params["description"]
-    @entry["occurred_on"] = params["occurred_on"]
-    @entry["place_id"] = params["place_id"]
-    @entry.save
-    redirect_to "/places/#{@entry["place_id"]}"
+    @place = Place.find(params[:place_id])
+    @entry = @place.entries.build(entry_params)
+    @entry.user = current_user
+
+    if @entry.save
+      redirect_to place_path(@place)
+    else
+      render "places/show"
+    end
   end
 
+  private
+
+  def entry_params
+    params.require(:entry).permit(:title, :description, :occurred_on, :image)
+  end
 end
